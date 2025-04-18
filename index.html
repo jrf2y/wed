@@ -253,13 +253,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                // 🔒 Simple password protection
-            const password = prompt("Enter upload password:");
-            if (password !== "wedding123") {
+            // 🔒 Simple token-based access control via URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const accessKey = urlParams.get("key");
+            const validKey = "mexico2025"; // change this to your secret token
+        
+            if (accessKey !== validKey) {
               document.body.innerHTML = `
                 <div class="text-center p-10">
                   <h1 class="text-2xl font-bold text-red-600">Access Denied</h1>
-                  <p class="mt-4">You must enter the correct password to use this uploader.</p>
+                  <p class="mt-4">You must use the official link to access this uploader.</p>
                 </div>`;
               return;
             }
