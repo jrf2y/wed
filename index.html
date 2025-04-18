@@ -253,6 +253,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+                // 🔒 Simple password protection
+            const password = prompt("Enter upload password:");
+            if (password !== "wedding123") {
+              document.body.innerHTML = `
+                <div class="text-center p-10">
+                  <h1 class="text-2xl font-bold text-red-600">Access Denied</h1>
+                  <p class="mt-4">You must enter the correct password to use this uploader.</p>
+                </div>`;
+              return;
+            }
           const steps = {
             name: document.getElementById('step-name'),
             selection: document.getElementById('step-selection'),
