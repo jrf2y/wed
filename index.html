@@ -302,14 +302,14 @@
             if (uploadInProgress) return;
 
             // 📱 Force keyboard to close before moving on
-            guestNameInput.blur();
+            //guestNameInput.blur();
 
             // Small delay to let blur happen
-            setTimeout(() => {
-              guestName = guestNameInput.value.trim();
-              showStep('selection');
-            }, 100);
-          });
+            //setTimeout(() => {
+            //  guestName = guestNameInput.value.trim();
+            //  showStep('selection');
+           // }, 100);
+         // });
 
           buttons.selectionBack.addEventListener('click', () => {
             if (!uploadInProgress) showStep('name');
