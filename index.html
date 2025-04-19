@@ -408,10 +408,12 @@
                     </button>
                   `;
                   previewContainer.appendChild(preview);
-                  preview.querySelector('.remove-photo').addEventListener('click', evt => {
-                      evt.preventDefault();            // prevent default focus
+                  preview.querySelector('.remove-photo')
+                    .addEventListener('click', evt => {
+                      evt.preventDefault();            // never let the button take focus
+                      evt.stopPropagation();           // keep the event from bubbling  
+                      document.activeElement.blur();   // blur whatever is focused (often the button)
                       removeFile(+evt.currentTarget.dataset.index);
-                      evt.currentTarget.blur();        // explicitly remove focus
                   });
                 };
                 reader.readAsDataURL(file);
