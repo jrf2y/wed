@@ -386,6 +386,11 @@
                   </button>
                 `;
                 previewContainer.appendChild(preview);
+                if (index === 0) {
+                  setTimeout(() => {
+                    document.getElementById('step-selection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }, 100);
+                }
                 preview.querySelector('.remove-photo').addEventListener('click', evt => {
                   evt.stopPropagation();
                   removeFile(parseInt(evt.currentTarget.getAttribute('data-index')));
