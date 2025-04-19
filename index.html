@@ -149,6 +149,18 @@
                 stroke-dashoffset: 0;
             }
         }
+
+        @keyframes popUp {
+          0% {
+            transform: scale(0) translateY(0);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(3) translateY(-80px);
+            opacity: 0;
+          }
+        }
+
     </style>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
@@ -195,7 +207,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 hidden" id="preview-container">
                     <!-- Photo previews will be added here -->
                 </div>
-                
+
                 <div class="flex justify-between items-center mt-6">
                     <button id="selection-back" class="text-[var(--accent)] font-medium py-2 px-4 rounded-lg">
                         <i class="fas fa-arrow-left mr-2"></i> Back
@@ -236,7 +248,10 @@
                 <p class="text-lg mb-6 max-w-md mx-auto">
                     Your photos have been successfully uploaded. We can't wait to relive these special moments!
                 </p>
-                
+                <p id="thanks-line" class="mt-4 text-[var(--dark)] opacity-0 transition-opacity duration-1000">
+                Your photos mean the world to us. 💕
+                </p>
+              
                 <div class="mt-8">
                     <button id="success-new" class="btn-primary py-3 px-8 rounded-lg text-white font-medium inline-flex items-center">
                         <i class="fas fa-plus mr-2"></i> Upload More Photos
@@ -253,19 +268,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 🔒 Simple token-based access control via URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const accessKey = urlParams.get("key");
-            const validKey = "mexico2025"; // change this to your secret token
-        
-            if (accessKey !== validKey) {
-              document.body.innerHTML = `
-                <div class="text-center p-10">
-                  <h1 class="text-2xl font-bold text-red-600">Access Denied</h1>
-                  <p class="mt-4">You must use the official link to access this uploader.</p>
-                </div>`;
-              return;
-            }
           const steps = {
             name: document.getElementById('step-name'),
             selection: document.getElementById('step-selection'),
@@ -295,6 +297,7 @@
           createHearts();
       
           buttons.nameNext.addEventListener('click', () => {
+            if (uploadInProgress) return; // 🔒 Prevent step navigation during upload
             guestName = guestNameInput.value.trim();
             showStep('selection');
           });
@@ -304,6 +307,7 @@
           });
       
           buttons.selectionNext.addEventListener('click', () => {
+            if (uploadInProgress) return; // 🔒 Prevent duplicate uploads
             if (selectedFiles.length > 0) {
               uploadInProgress = true;
               showStep('upload');
@@ -312,11 +316,19 @@
           });
       
           buttons.successNew.addEventListener('click', () => {
+            if (uploadInProgress) return; // 🔒 Prevent duplicate uploads
             resetUploader();
             showStep('selection');
           });
       
           fileInput.addEventListener('change', handleFileSelect);
+
+          // 📱 Mobile: Dismiss keyboard when tapping outside
+          document.body.addEventListener('touchstart', function (e) {
+            if (!e.target.closest('input, textarea')) {
+              document.activeElement.blur();
+            }
+          });
       
           function showStep(step) {
             document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
@@ -328,7 +340,7 @@
               }
             }
           }
-      
+          
           function handleFileSelect(e) {
             const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
             if (files.length === 0) return;
@@ -397,86 +409,124 @@
             });
           }
       
-          function startUpload() {
-            uploadContainer.innerHTML = '';
-            uploadCount.textContent = `0/${selectedFiles.length} photos`;
-            uploadPercent.textContent = '0%';
-            progressBar.style.width = '0%';
-      
-            selectedFiles.forEach((file, index) => {
-              const uploadItem = document.createElement('div');
-              uploadItem.className = 'upload-item bg-[var(--primary)] p-4 rounded-lg';
-              uploadItem.innerHTML = `
-                <div class="flex items-center">
-                  <div class="w-10 h-10 mr-4">
-                    <img src="" alt="thumb" class="w-full h-full object-cover rounded-lg" id="thumb-${index}">
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <div class="flex justify-between">
-                      <p class="font-medium truncate">${file.name}</p>
-                      <span class="upload-status text-sm">Waiting</span>
+            function startUpload() {
+              uploadContainer.innerHTML = '';
+              uploadCount.textContent = `4/4 photos`;
+              uploadPercent.textContent = '100%';
+              progressBar.style.width = '100%';
+            
+              for (let i = 0; i < 4; i++) {
+                const uploadItem = document.createElement('div');
+                uploadItem.className = 'upload-item bg-[var(--primary)] p-4 rounded-lg';
+                uploadItem.innerHTML = `
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 mr-4">
+                      <div class="w-full h-full object-cover rounded-lg bg-gray-300 flex items-center justify-center text-sm text-gray-600">📸</div>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                      <div class="file-progress bg-[var(--accent)] h-1.5 rounded-full" style="width: 0%"></div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex justify-between">
+                        <p class="font-medium truncate">test_photo_${i + 1}.jpg</p>
+                        <span class="upload-status text-sm">Uploaded</span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                        <div class="file-progress bg-[var(--accent)] h-1.5 rounded-full" style="width: 100%"></div>
+                      </div>
                     </div>
-                  </div>
-                </div>`;
-              uploadContainer.appendChild(uploadItem);
-      
-              const thumbImg = uploadItem.querySelector(`#thumb-${index}`);
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                thumbImg.src = e.target.result;
-              };
-              reader.readAsDataURL(file);
-            });
-      
-            uploadNextFile(0);
-          }
+                  </div>`;
+                uploadContainer.appendChild(uploadItem);
+              }
+            
+              // fake delay before success screen
+              setTimeout(() => {
+                showStep('success');
+                burstHearts();
+            
+                setTimeout(() => {
+                  const line = document.getElementById('thanks-line');
+                  if (line) line.classList.add('opacity-100');
+                }, 1000);
+              }, 2000);
+            }
+
       
           function uploadNextFile(index) {
             if (index >= selectedFiles.length) {
               uploadInProgress = false;
+              setTimeout(() => {
+                showStep('success');
+                burstHearts(); // 💥 Heart confetti!
+                //  Vibrate on success (mobile supported)
+                if (navigator.vibrate) {
+                  navigator.vibrate([100, 50, 100]);
+                }
 
-              if (navigator.vibrate) {
-                navigator.vibrate(200); // 🎉 A little celebratory buzz
-              }
+                // fade in the message
+                setTimeout(() => {
+                  const line = document.getElementById('thanks-line');
+                  if (line) line.classList.add('opacity-100');
+                }, 1000); // allow checkmark to animate first
+              }, 600);
 
-              setTimeout(() => showStep('success'), 600);
               return;
             }
-      
+
             const file = selectedFiles[index];
             const uploadItem = uploadContainer.children[index];
             const progressBarElem = uploadItem.querySelector('.file-progress');
             const statusText = uploadItem.querySelector('.upload-status');
-      
-            let progress = 0;
-            const interval = setInterval(() => {
-              progress += Math.random() * 10;
-              if (progress > 90) progress = 90;
-              progressBarElem.style.width = `${progress}%`;
-            }, 100);
-      
-          setTimeout(() => {
-            clearInterval(interval);
-            progressBarElem.style.width = '100%';
-            statusText.textContent = 'Uploaded';
-          
-            const uploadedCount = index + 1;
-            const percent = Math.round((uploadedCount / selectedFiles.length) * 100);
-            uploadCount.textContent = `${uploadedCount}/${selectedFiles.length} photos`;
-            uploadPercent.textContent = `${percent}%`;
-            progressBar.style.width = `${percent}%`;
-          
-            uploadNextFile(index + 1);
-          }, 1000 + Math.random() * 1000); // fake 1-2 second delay per photo
 
-      
+            // 🧮 Calculate relative size
+            const totalSize = selectedFiles.reduce((sum, f) => sum + f.size, 0);
+            const fileShare = file.size / totalSize;
+            const baseDuration = 7000; // base animation time in ms
+            const animationDuration = baseDuration * fileShare;
+            const intervalMs = 150; // interval in milliseconds
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const base64Data = e.target.result.split(',')[1]; // remove prefix
+              const formData = new FormData();
+              formData.append("file", base64Data);
+              formData.append("name", guestName ? `${guestName.replace(/\s+/g, '_')}_${file.name}` : file.name);
+              formData.append("mimeType", file.type);
+              formData.append("key", "weddingKey2025");
+
+              // 🌀 Start progress animation now
+              let percent = 0;
+              const interval = setInterval(() => {
+                percent += (100 * (intervalMs / animationDuration)); // dynamic increment
+                if (percent >= 96) return; // cap it to simulate upload wait
+                progressBarElem.style.width = `${percent.toFixed(0)}%`;
+              }, intervalMs);
+
+              fetch("https://script.google.com/macros/s/AKfycbwcmUzUmVZ4Kk_MF4kLLenmnNhgi45spaOqPkhwNO9liojPRlJxhECLd4MgvPuOnVud/exec", {
+                method: "POST",
+                body: formData
+              })
+                .then(response => response.text())
+                .then(result => {
+                  clearInterval(interval); // 🛑 Stop animation
+                  progressBarElem.style.width = '100%';
+                  statusText.textContent = result === "OK" ? "Uploaded" : "Failed";
+                  uploadCount.textContent = `${index + 1}/${selectedFiles.length} photos`;
+                  uploadPercent.textContent = `${Math.round((index + 1) / selectedFiles.length * 100)}%`;
+                  progressBar.style.width = `${Math.round((index + 1) / selectedFiles.length * 100)}%`;
+                  uploadNextFile(index + 1);
+                })
+                .catch(error => {
+                  clearInterval(interval); // 🛑 Also stop on failure
+                  console.error("Upload error:", error);
+                  progressBarElem.style.width = '100%';
+                  statusText.textContent = "Failed";
+                  uploadNextFile(index + 1);
+                });
+            };
+
             reader.readAsDataURL(file);
-            statusText.textContent = 'Uploading...';
+            statusText.textContent = "Uploading...";
           }
-      
+
+
           function resetUploader() {
             selectedFiles = [];
             uploadInProgress = false;
@@ -507,11 +557,45 @@
               container.appendChild(heart);
             }
           }
-      
+
+          function burstHearts() {
+            const container = document.getElementById('hearts-container');
+            const colors = ['#f8e9e1', '#e8c4b8', '#d4a59a', '#b3887e'];
+
+            for (let i = 0; i < 25; i++) {
+              const heart = document.createElement('div');
+              heart.className = 'heart absolute pointer-events-none';
+              heart.innerHTML = '<i class="fas fa-heart"></i>';
+
+              const size = Math.random() * 24 + 12;
+              const left = Math.random() * 100;
+              const top = Math.random() * 100;
+              const color = colors[Math.floor(Math.random() * colors.length)];
+
+              heart.style.left = `${left}%`;
+              heart.style.top = `${top}%`;
+              heart.style.fontSize = `${size}px`;
+              heart.style.color = color;
+              heart.style.opacity = 1;
+              heart.style.animation = `popUp 1.5s ease-out forwards`;
+
+              container.appendChild(heart);
+
+              setTimeout(() => {
+                heart.remove();
+              }, 1500);
+            }
+          }
+
           showStep('name');
         });
       </script>
       
+      <script>
+        document.addEventListener("contextmenu", e => e.preventDefault());
+        document.addEventListener("dragstart", e => e.preventDefault());
+      </script>
+
       
 </body>
 </html>
