@@ -300,11 +300,18 @@
           createHearts();
       
           buttons.nameNext.addEventListener('click', () => {
-            if (uploadInProgress) return; // 🔒 Prevent step navigation during upload
-            guestName = guestNameInput.value.trim();
-            showStep('selection');
+            if (uploadInProgress) return;
+
+            // 📱 Force keyboard to close before moving on
+            guestNameInput.blur();
+
+            // Small delay to let blur happen
+            setTimeout(() => {
+              guestName = guestNameInput.value.trim();
+              showStep('selection');
+            }, 100);
           });
-      
+
           buttons.selectionBack.addEventListener('click', () => {
             if (!uploadInProgress) showStep('name');
           });
