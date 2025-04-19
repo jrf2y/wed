@@ -276,6 +276,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            let hasScrolledToSelection = false;
           const steps = {
             name: document.getElementById('step-name'),
             selection: document.getElementById('step-selection'),
@@ -386,7 +387,8 @@
                   </button>
                 `;
                 previewContainer.appendChild(preview);
-                if (index === 0) {
+                if (index === 0 && !hasScrolledToSelection) {
+                  hasScrolledToSelection = true;
                   setTimeout(() => {
                     document.getElementById('step-selection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }, 100);
@@ -572,6 +574,7 @@
             previewContainer.classList.add('hidden');
             buttons.selectionNext.classList.add('hidden');
             fileInput.value = '';
+            hasScrolledToSelection = false;
           }
       
           function createHearts() {
