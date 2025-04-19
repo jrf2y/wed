@@ -343,7 +343,7 @@
             
             fileInput.addEventListener('change', e => {
               // 1) render previews as before
-              handleFileSelect(e);
+              (e);
             
               // 2) then only scroll once, on a real user change
               if (e.isTrusted && !hasScrolledToSelection) {
@@ -408,11 +408,11 @@
                     </button>
                   `;
                   previewContainer.appendChild(preview);
-                  preview.querySelector('.remove-photo')
-                    .addEventListener('click', evt => {
-                      evt.stopPropagation();
+                  preview.querySelector('.remove-photo').addEventListener('click', evt => {
+                      evt.preventDefault();            // prevent default focus
                       removeFile(+evt.currentTarget.dataset.index);
-                    });
+                      evt.currentTarget.blur();        // explicitly remove focus
+                  });
                 };
                 reader.readAsDataURL(file);
               });
