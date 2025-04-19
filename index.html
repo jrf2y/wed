@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Share Your Wedding Memories</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -282,7 +282,7 @@
             successNew: document.getElementById('success-new')
           };
 
-          const FAKE_UPLOAD_MODE = true; // 🔧 Toggle this to false when ready for real uploads
+          const FAKE_UPLOAD_MODE = false; // 🔧 Toggle this to false when ready for real uploads
 
           const fileInput = document.getElementById('file-input');
           const guestNameInput = document.getElementById('guest-name');
@@ -334,14 +334,14 @@
 
           // 📱 Mobile: Dismiss keyboard when tapping outside
           document.body.addEventListener('touchstart', function(e) {
-              // if it's not an input *or* your Continue button, blur
-              if (
-                !e.target.closest('input, textarea') &&
-                !e.target.closest('#name-next')    // ← ignore your Continue btn
-              ) {
-                document.activeElement.blur();
-              }
-            });
+            // if it's not an input *or* your Continue button, blur
+            if (
+              !e.target.closest('input, textarea') &&
+              !e.target.closest('#name-next')    // ← ignore your Continue btn
+            ) {
+              document.activeElement.blur();
+            }
+          });
 
       
           function showStep(step) {
