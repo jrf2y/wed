@@ -1,229 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Share Your Wedding Memories</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap');
-        
-        :root {
-            --primary: #f8e9e1;
-            --secondary: #e8c4b8;
-            --accent: #d4a59a;
-            --dark: #5e4a42;
-            --light: #fff9f5;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--light);
-            color: var(--dark);
-        }
-        
-        h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .progress-bar {
-            height: 6px;
-            transition: width 0.3s ease;
-        }
-        
-        .photo-preview {
-            transition: all 0.3s ease;
-        }
-        
-        .photo-preview:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .file-input-label {
-            border: 2px dashed var(--accent);
-            transition: all 0.3s ease;
-        }
-        
-        .file-input-label:hover {
-            background-color: var(--primary);
-            border-color: var(--dark);
-        }
-        
-        .btn-primary {
-            background-color: var(--accent);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--dark);
-            transform: translateY(-2px);
-        }
-        
-        .floating-hearts {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .heart {
-            position: absolute;
-            opacity: 0;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.7; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-        }
-        
-        @keyframes checkmark { 0% { stroke-dashoffset: 50px; } 100% { stroke-dashoffset: 0; } }
-        .checkmark { width: 56px; height: 56px; border-radius: 50%; display: block; stroke-width: 4; stroke: #fff; stroke-miterlimit: 10; margin: 10% auto; box-shadow: 0 0 0 rgba(72, 180, 97, 0.4); animation: checkmark 0.6s ease-in-out; }
-        .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 4; stroke-miterlimit: 10; stroke: #48b461; fill: none; animation: checkmark__circle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
-        .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: checkmark__check 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
-        @keyframes checkmark__circle { 0% { stroke-dashoffset: 166; } 100% { stroke-dashoffset: 0; } }
-        @keyframes checkmark__check { 0% { stroke-dashoffset: 48; } 100% { stroke-dashoffset: 0; } }
-        @keyframes popUp { 0% { transform: scale(0) translateY(0); opacity: 1; } 100% { transform: scale(3) translateY(-80px); opacity: 0; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Your Wedding Memories</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+    :root { --primary: #f8e9e1; --secondary: #e8c4b8; --accent: #d4a59a; --dark: #5e4a42; --light: #fff9f5; }
+    body { font-family: 'Montserrat', sans-serif; background-color: var(--light); color: var(--dark); }
+    h1,h2,h3 { font-family: 'Playfair Display', serif; }
+    .progress-bar { height: 6px; transition: width 0.3s ease; }
+    .photo-preview { transition: all 0.3s ease; }
+    .photo-preview:hover { transform: scale(1.03); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .file-input-label { border: 2px dashed var(--accent); transition: all 0.3s ease; }
+    .file-input-label:hover { background-color: var(--primary); border-color: var(--dark); }
+    .btn-primary { background-color: var(--accent); transition: all 0.3s ease; }
+    .btn-primary:hover { background-color: var(--dark); transform: translateY(-2px); }
+    .floating-hearts { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; overflow:hidden; }
+    .heart { position:absolute; opacity:0; animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%{transform:translateY(0) rotate(0);opacity:0;}10%{opacity:0.7;}100%{transform:translateY(-100vh) rotate(360deg);opacity:0;} }
+    @keyframes checkmark {0%{stroke-dashoffset:50px;}100%{stroke-dashoffset:0;}}
+    .checkmark { width:56px;height:56px;border-radius:50%;display:block;stroke-width:4;stroke:#fff;stroke-miterlimit:10;margin:10% auto;box-shadow:0 0 0 rgba(72,180,97,0.4);animation:checkmark 0.6s ease-in-out; }
+    .checkmark__circle { stroke-dasharray:166;stroke-dashoffset:166;stroke-width:4;stroke-miterlimit:10;stroke:#48b461;fill:none;animation:checkmark__circle 0.6s cubic-bezier(0.65,0,0.45,1) forwards; }
+    .checkmark__check { transform-origin:50% 50%;stroke-dasharray:48;stroke-dashoffset:48;animation:checkmark__check 0.3s cubic-bezier(0.65,0,0.45,1) 0.8s forwards; }
+    @keyframes checkmark__circle {0%{stroke-dashoffset:166;}100%{stroke-dashoffset:0;}}
+    @keyframes checkmark__check {0%{stroke-dashoffset:48;}100%{stroke-dashoffset:0;}}
+    @keyframes popUp {0%{transform:scale(0) translateY(0);opacity:1;}100%{transform:scale(3) translateY(-80px);opacity:0;}}
+  </style>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
-    <div class="floating-hearts" id="hearts-container"></div>
-    <div class="container mx-auto px-4 py-8 max-w-3xl">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-[var(--dark)]">Share Your Wedding Memories</h1>
-            <p class="text-lg text-[var(--dark)] max-w-2xl mx-auto">Help us capture every special moment by uploading your favorite photos from our wedding week.</p>
-        </header>
-        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8 transition-all duration-300" id="upload-container">
-            <div id="step-name" class="step">
-                <h2 class="text-2xl font-semibold mb-6 text-center">First, tell us who you are</h2>
-                <div class="mb-6">
-                    <label for="guest-name" class="block text-sm font-medium mb-2">Your name (optional)</label>
-                    <input type="text" id="guest-name" class="w-full px-4 py-3 rounded-lg border border-[var(--secondary)] focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] outline-none transition" placeholder="e.g. Sarah & James">
-                </div>
-                <button id="name-next" class="btn-primary w-full py-3 px-6 rounded-lg text-white font-medium text-lg mt-4 shadow-md">
-                    Continue <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-            </div>
-            <div id="step-selection" class="step hidden">
-                <h2 class="text-2xl font-semibold mb-6 text-center">Select your photos</h2>
-                <div class="mb-6">
-                    <input type="file" id="file-input" class="hidden" accept="image/*" multiple>
-                    <label for="file-input" class="file-input-label flex flex-col items-center justify-center p-8 rounded-xl cursor-pointer bg-[var(--primary)]">
-                        <i class="fas fa-camera-retro text-4xl mb-4 text-[var(--accent)]"></i>
-                        <span class="text-lg font-medium mb-2">Tap to select photos</span>
-                        <span class="text-sm text-gray-600">Select multiple photos from your device</span>
-                    </label>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 pb-12 hidden" id="preview-container"></div>
-                <div class="relative z-10">
-                  <button id="selection-back" class="text-[var(--accent)] font-medium py-2 px-4 rounded-lg"><i class="fas fa-arrow-left mr-2"></i> Back</button>
-                </div>
-                <div id="upload-action-bar" class="fixed bottom-6 left-0 w-full px-4 z-50">
-                  <button id="selection-next" class="btn-primary w-full py-5 rounded-full text-white text-xl font-semibold shadow-xl hidden">Upload Photos <i class="fas fa-cloud-upload-alt ml-2"></i></button>
-                </div>
-            </div>
-            <div id="step-upload" class="step hidden">
-                <h2 class="text-2xl font-semibold mb-6 text-center">Uploading your photos</h2>
-                <div class="mb-8">
-                    <div class="flex justify-between mb-2"><span id="upload-count">0/0 photos</span><span id="upload-percent">0%</span></div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5"><div id="upload-progress" class="progress-bar bg-[var(--accent)] h-2.5 rounded-full" style="width: 0%"></div></div>
-                </div>
-                <div id="upload-items" class="space-y-4"></div>
-            </div>
-            <div id="step-success" class="step hidden text-center">
-                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
-                <h2 class="text-3xl font-semibold mb-4">Thank You!</h2>
-                <p class="text-lg mb-6 max-w-md mx-auto">Your photos have been successfully uploaded. We can't wait to relive these special moments!</p>
-                <p id="thanks-line" class="mt-4 text-[var(--dark)] opacity-0 transition-opacity duration-1000">Your photos mean the world to us. 💕</p>
-                <div class="mt-8"><button id="success-new" class="btn-primary py-3 px-8 rounded-lg text-white font-medium inline-flex items-center"><i class="fas fa-plus mr-2"></i> Upload More Photos</button></div>
-            </div>
+  <div class="floating-hearts" id="hearts-container"></div>
+  <div class="container mx-auto px-4 py-8 max-w-3xl">
+    <header class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 text-[var(--dark)]">Share Your Wedding Memories</h1>
+      <p class="text-lg text-[var(--dark)] max-w-2xl mx-auto">Help us capture every special moment by uploading your favorite photos from our wedding week.</p>
+    </header>
+    <div id="upload-container" class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8 transition-all duration-300">
+      <!-- Step 1: Name Input -->
+      <div id="step-name" class="step">
+        <h2 class="text-2xl font-semibold mb-6 text-center">First, tell us who you are</h2>
+        <div class="mb-6">
+          <label for="guest-name" class="block text-sm font-medium mb-2">Your name (optional)</label>
+          <input type="text" id="guest-name" class="w-full px-4 py-3 rounded-lg border border-[var(--secondary)] focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] outline-none transition" placeholder="e.g. Sarah & James">
         </div>
-        <footer class="text-center text-sm text-gray-500 mt-12"><p>Created with love for Mr. and Mrs. Davis.</p></footer>
+        <button id="name-next" class="btn-primary w-full py-3 px-6 rounded-lg text-white font-medium text-lg mt-4 shadow-md">Continue <i class="fas fa-arrow-right ml-2"></i></button>
+      </div>
+      <!-- Step 2: Photo Selection -->
+      <div id="step-selection" class="step hidden">
+        <h2 class="text-2xl font-semibold mb-6 text-center">Select your photos</h2>
+        <div class="mb-6">
+          <input type="file" id="file-input" class="hidden" accept="image/*" multiple>
+          <label for="file-input" class="file-input-label flex flex-col items-center justify-center p-8 rounded-xl cursor-pointer bg-[var(--primary)]">
+            <i class="fas fa-camera-retro text-4xl mb-4 text-[var(--accent)]"></i>
+            <span class="text-lg font-medium mb-2">Tap to select photos</span>
+            <span class="text-sm text-gray-600">Select multiple photos from your device</span>
+          </label>
+        </div>
+        <div id="preview-container" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 pb-12 hidden"></div>
+        <div class="flex justify-between items-center mt-6">
+          <button id="selection-back" class="text-[var(--accent)] font-medium py-2 px-4 rounded-lg"><i class="fas fa-arrow-left mr-2"></i> Back</button>
+          <button id="selection-next" class="btn-primary py-3 px-6 rounded-lg text-white font-medium hidden">Upload Photos <i class="fas fa-cloud-upload-alt ml-2"></i></button>
+        </div>
+      </div>
+      <!-- Step 3: Upload Progress -->
+      <div id="step-upload" class="step hidden">
+        <h2 class="text-2xl font-semibold mb-6 text-center">Uploading your photos</h2>
+        <div class="mb-8">
+          <div class="flex justify-between mb-2"><span id="upload-count">0/0 photos</span><span id="upload-percent">0%</span></div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5"><div id="upload-progress" class="progress-bar bg-[var(--accent)] h-2.5 rounded-full" style="width:0%"></div></div>
+        </div>
+        <div id="upload-items" class="space-y-4"></div>
+      </div>
+      <!-- Step 4: Success -->
+      <div id="step-success" class="step hidden text-center">
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+        <h2 class="text-3xl font-semibold mb-4">Thank You!</h2>
+        <p class="text-lg mb-6 max-w-md mx-auto">Your photos have been successfully uploaded. We can't wait to relive these special moments!</p>
+        <p id="thanks-line" class="mt-4 text-[var(--dark)] opacity-0 transition-opacity duration-1000">Your photos mean the world to us. 💕</p>
+        <button id="success-new" class="btn-primary py-3 px-8 rounded-lg text-white font-medium inline-flex items-center mt-4"><i class="fas fa-plus mr-2"></i> Upload More Photos</button>
+      </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let hasScrolledToSelection = false;
-          const steps = {
-            name: document.getElementById('step-name'),
-            selection: document.getElementById('step-selection'),
-            upload: document.getElementById('step-upload'),
-            success: document.getElementById('step-success')
+    <footer class="text-center text-sm text-gray-500 mt-12">Created with love for Mr. and Mrs. Davis.</footer>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let hasScrolledToSelection = false;
+      const steps = {
+        name: document.getElementById('step-name'),
+        selection: document.getElementById('step-selection'),
+        upload: document.getElementById('step-upload'),
+        success: document.getElementById('step-success')
+      };
+      const buttons = {
+        nameNext: document.getElementById('name-next'),
+        selectionBack: document.getElementById('selection-back'),
+        selectionNext: document.getElementById('selection-next'),
+        successNew: document.getElementById('success-new')
+      };
+      const fileInput = document.getElementById('file-input');
+      const previewContainer = document.getElementById('preview-container');
+      const uploadContainer = document.getElementById('upload-items');
+      const progressBar = document.getElementById('upload-progress');
+      const uploadCount = document.getElementById('upload-count');
+      const uploadPercent = document.getElementById('upload-percent');
+      let selectedFiles = [];
+      let guestName = '';
+      let uploadInProgress = false;
+
+      createHearts();
+
+      buttons.nameNext.addEventListener('click', function() {
+        guestName = document.getElementById('guest-name').value.trim();
+        showStep('selection');
+      });
+      buttons.selectionBack.addEventListener('click', function(){ showStep('name'); });
+      buttons.selectionNext.addEventListener('click', function(){
+        if (!uploadInProgress && selectedFiles.length) {
+          uploadInProgress = true;
+          showStep('upload');
+          startUpload();
+        }
+      });
+      buttons.successNew.addEventListener('click', function(){ resetUploader(); showStep('selection'); });
+
+      fileInput.addEventListener('change', function(e) {
+        handleFileSelect(e);
+        if (e.isTrusted && !hasScrolledToSelection) {
+          hasScrolledToSelection = true;
+          steps.selection.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+      });
+      document.body.addEventListener('touchstart', function(e) {
+        if (!e.target.closest('input, textarea') && !e.target.closest('#name-next')) document.activeElement.blur();
+      });
+
+      function showStep(step) {
+        Object.values(steps).forEach(s=>s.classList.add('hidden'));
+        steps[step].classList.remove('hidden');
+      }
+
+      function handleFileSelect(e) {
+        const files = Array.from(e.target.files).filter(f=>f.type.startsWith('image/'));
+        if (!files.length) return;
+        selectedFiles = files;
+        previewContainer.innerHTML = '';
+        previewContainer.classList.remove('hidden');
+        buttons.selectionNext.classList.remove('hidden');
+        files.forEach((file,index)=>{
+          const reader=new FileReader();
+          reader.onload=function(evt){
+            const div=document.createElement('div');
+            div.className='photo-preview relative overflow-hidden rounded-lg bg-gray-100 aspect-square';
+            div.innerHTML=`<img src="${evt.target.result}" class="w-full h-full object-cover">
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm truncate">${file.name}</div>
+              <button type="button" class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full w-6 h-6 flex items-center justify-center text-red-500 remove-photo" data-index="${index}"><i class="fas fa-times text-xs"></i></button>`;
+            previewContainer.appendChild(div);
+            const btn=div.querySelector('.remove-photo');
+            btn.addEventListener('click',function(evt){ evt.preventDefault(); evt.stopPropagation(); document.activeElement.blur(); removeFile(+this.dataset.index); });
           };
-          const buttons = {
-            nameNext: document.getElementById('name-next'),
-            selectionBack: document.getElementById('selection-back'),
-            selectionNext: document.getElementById('selection-next'),
-            successNew: document.getElementById('success-new')
-          };
-          const FAKE_UPLOAD_MODE = false;
-          const fileInput = document.getElementById('file-input');
-          const guestNameInput = document.getElementById('guest-name');
-          const previewContainer = document.getElementById('preview-container');
-          const uploadContainer = document.getElementById('upload-items');
-          const progressBar = document.getElementById('upload-progress');
-          const uploadCount = document.getElementById('upload-count');
-          const uploadPercent = document.getElementById('upload-percent');
-          let selectedFiles = [];
-          let guestName = '';
-          let uploadInProgress = false;
-          createHearts();
-          buttons.nameNext.addEventListener('click', () => {
-            if (uploadInProgress) return;
-            guestNameInput.blur();
-            setTimeout(() => { guestName = guestNameInput.value.trim(); showStep('selection'); }, 100);
-          });
-          buttons.selectionBack.addEventListener('click', () => { if (!uploadInProgress) showStep('name'); });
-          buttons.selectionNext.addEventListener('click', () => { if (!uploadInProgress && selectedFiles.length) { uploadInProgress = true; showStep('upload'); startUpload(); }});
-          buttons.successNew.addEventListener('click', () => { if (!uploadInProgress) { resetUploader(); showStep('selection'); }});
-          fileInput.addEventListener('change', e => {
-            handleFileSelect(e);
-            if (e.isTrusted && !hasScrolledToSelection) {
-              hasScrolledToSelection = true;
-              document.getElementById('step-selection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          });
-          document.body.addEventListener('touchstart', function(e) {
-            if (!e.target.closest('input, textarea') && !e.target.closest('#name-next')) {
-              document.activeElement.blur();
-            }
-          });
-          function showStep(step) { document.querySelectorAll('.step').forEach(el => el.classList.add('hidden')); document.getElementById(`step-${step}`).classList.remove('hidden'); if (step==='selection' && !selectedFiles.length) { previewContainer.classList.add('hidden'); buttons.selectionNext.classList.add('hidden'); }}
-          function handleFileSelect(e) {
-            const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
-            if (!files.length) return;
-            selectedFiles = files;
-            previewContainer.innerHTML = '';
-            previewContainer.classList.remove('hidden');
-            buttons.selectionNext.classList.remove('hidden');
-            selectedFiles.forEach((file,index) => {
-              const reader=new FileReader();
-              reader.onload=evt=>{
-                const preview=document.createElement('div');
-                preview.className='photo-preview relative overflow-hidden rounded-lg bg-gray-100 aspect-square';
-                preview.innerHTML=`<img src="${evt.target.result}" class="w-full h-full object-cover">
-                  <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm truncate">${file.name}</div>
-                  <button class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full w-6 h-6 flex items-center justify-center text-red-500 remove-photo" data-index="${index}"><i class="fas fa-times text-xs"></i></button>`;
-                previewContainer.appendChild(preview);
-                preview.querySelector('.remove-photo').addEventListener('click',evt=>{ evt.preventDefault(); evt.stopPropagation(); document.activeElement.blur(); removeFile(+evt.currentTarget.dataset.index); });
-              };
-              reader.readAsDataURL(file);
-            });
-          }
-          function removeFile(index) { selectedFiles.splice(index,1); previewContainer.innerHTML=''; if (!selectedFiles.length) { previewContainer.classList.add('hidden'); buttons.selectionNext.classList.add('hidden'); fileInput.value=''; return;} selectedFiles.forEach((file,newIndex)=>{ const reader=new FileReader(); reader.onload=e=>{ const preview=document.createElement('div'); preview.className='photo-preview relative overflow-hidden rounded-lg bg-gray-100 aspect-square'; preview.innerHTML=`<img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm truncate">${file.name}</div><button class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full w-6 h-6 flex items-center justify-center text-red-500 remove-photo" data-index="${newIndex}"><i class="fas fa-times text-xs"></i></button>`; previewContainer.appendChild(preview); preview.querySelector('.remove-photo').addEventListener('click',evt=>{ evt.stopPropagation(); removeFile(+evt.currentTarget.dataset.index); }); }; reader.readAsDataURL(file); }); }
-          function startUpload() {/* omitted for brevity */}
-          function resetUploader() { selectedFiles=[]; uploadInProgress=false; previewContainer.innerHTML=''; previewContainer.classList.add('hidden'); buttons.selectionNext.classList.add('hidden'); fileInput.value=''; hasScrolledToSelection=false;}
-          function createHearts(){/* omitted */}
-          function burstHearts(){/* omitted */}
-          showStep('name');
+          reader.readAsDataURL(file);
         });
-    </script>
-    <script>document.addEventListener("contextmenu",e=>e.preventDefault());document.addEventListener("dragstart",e=>e.preventDefault());</script>
+      }
+
+      function removeFile(index) {
+        selectedFiles.splice(index,1);
+        const btn=previewContainer.querySelector(`.remove-photo[data-index="${index}"]`);
+        btn.closest('.photo-preview').remove();
+        if (!selectedFiles.length) {
+          previewContainer.classList.add('hidden'); buttons.selectionNext.classList.add('hidden'); fileInput.value='';
+        } else {
+          previewContainer.querySelectorAll('.remove-photo').forEach((b,i)=>b.dataset.index=i);
+        }
+      }
+
+      function startUpload() {
+        uploadContainer.innerHTML=''; uploadCount.textContent=`0/${selectedFiles.length} photos`; uploadPercent.textContent='0%'; progressBar.style.width='0%';
+        selectedFiles.forEach((file,i)=>{
+          const item=document.createElement('div'); item.className='upload-item bg-[var(--primary)] p-4 rounded-lg';
+          item.innerHTML=`<div class="flex items-center">
+            <div class="w-10 h-10 mr-4"><img src="" id="thumb-${i}" class="w-full h-full object-cover rounded-lg"></div>
+            <div class="flex-1 min-w-0"><div class="flex justify-between"><p class="font-medium truncate">${file.name}</p><span class="upload-status text-sm">Waiting</span></div><div class="w-full bg-gray-200 rounded-full h-1.5 mt-2"><div class="file-progress bg-[var(--accent)] h-1.5 rounded-full" style="width:0%"></div></div></div>
+          </div>`;
+          uploadContainer.appendChild(item);
+          const reader=new FileReader(); reader.onload=e=>document.getElementById(`thumb-${i}`).src=e.target.result; reader.readAsDataURL(file);
+        });
+        uploadNextFile(0);
+      }
+
+      function uploadNextFile(i) {
+        if (i>=selectedFiles.length) { uploadInProgress=false; setTimeout(()=>{ showStep('success'); burstHearts(); navigator.vibrate?.([100,50,100]); setTimeout(()=>document.getElementById('thanks-line').classList.add('opacity-100'),1000); },600); return; }
+        const file=selectedFiles[i]; const item=uploadContainer.children[i]; const prog=item.querySelector('.file-progress'); const status=item.querySelector('.upload-status');
+        const total=selectedFiles.reduce((s,f)=>s+f.size,0); const share=file.size/total; const base=7000; const dur=base*share; const step=150;
+        let pct=0; const iv=setInterval(()=>{ pct+=100*(step/dur); if(pct>=96) return; prog.style.width=`${pct.toFixed(0)}%`; },step);
+        const reader=new FileReader(); reader.onload=e=>{
+          const data=e.target.result.split(',')[1]; const form=new FormData(); form.append('file',data); form.append('name',guestName?`${guestName.replace(/\s+/g,'_')}_${file.name}`:file.name); form.append('mimeType',file.type); form.append('key','weddingKey2025');
+          setTimeout(()=>{ clearInterval(iv); prog.style.width='100%'; status.textContent='Uploaded'; uploadCount.textContent=`${i+1}/${selectedFiles.length} photos`; uploadPercent.textContent=`${Math.round((i+1)/selectedFiles.length*100)}%`; progressBar.style.width=`${Math.round((i+1)/selectedFiles.length*100)}%`; uploadNextFile(i+1); },1000+dur);
+        }; reader.readAsDataURL(file); status.textContent='Uploading...';
+      }
+
+      function resetUploader() { selectedFiles=[]; uploadInProgress=false; previewContainer.innerHTML=''; previewContainer.classList.add('hidden'); buttons.selectionNext.classList.add('hidden'); fileInput.value=''; hasScrolledToSelection=false; }
+
+      function createHearts() { const c=document.getElementById('hearts-container'),colors=['#f8e9e1','#e8c4b8','#d4a59a','#b3887e']; for(let i=0;i<12;i++){ const h=document.createElement('div'); h.className='heart'; h.innerHTML='<i class="fas fa-heart"></i>'; const s=Math.random()*20+10; h.style.fontSize=`${s}px`; h.style.left=`${Math.random()*100}%`; h.style.color=colors[Math.floor(Math.random()*colors.length)]; h.style.animationDelay=`${Math.random()*5}s`; h.style.animationDuration=`${Math.random()*3+6}s`; h.style.bottom=`-${s}px`; c.appendChild(h); }}
+      function burstHearts() { const cont=document.createElement('div'); cont.className='burst-hearts pointer-events-none fixed top-0 left-0 w-full h-full z-[9999]'; document.body.appendChild(cont); const colors=['#f8e9e1','#e8c4b8','#d4a59a','#b3887e']; for(let i=0;i<25;i++){ const h=document.createElement('div'); h.className='heart absolute'; h.innerHTML='<i class="fas fa-heart"></i>'; const s=Math.random()*24+12; h.style.fontSize=`${s}px`; h.style.left=`${Math.random()*100}%`; h.style.top=`${Math.random()*100}%`; h.style.color=colors[Math.floor(Math.random()*colors.length)]; h.style.opacity='1'; h.style.animation='popUp 1.5s ease-out forwards'; cont.appendChild(h); setTimeout(()=>h.remove(),1500);} setTimeout(()=>cont.remove(),1600); }
+
+      showStep('name');
+    });
+  </script>
+  <script>document.addEventListener('contextmenu',e=>e.preventDefault()); document.addEventListener('dragstart',e=>e.preventDefault());</script>
 </body>
 </html>
