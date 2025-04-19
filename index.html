@@ -351,10 +351,7 @@
               if (selectedFiles.length === 0) {
                 previewContainer.classList.add('hidden');
                 buttons.selectionNext.classList.add('hidden');
-                  // 🧭 Smooth scroll to the Upload button
-                setTimeout(() => {
-                  document.getElementById('selection-next')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
+
               }
             }
           }
@@ -366,7 +363,11 @@
             previewContainer.innerHTML = '';
             previewContainer.classList.remove('hidden');
             buttons.selectionNext.classList.remove('hidden');
-      
+                  // 🧭 Smooth scroll to the Upload button
+                setTimeout(() => {
+                  document.getElementById('selection-next')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+              
             selectedFiles.forEach((file, index) => {
               const reader = new FileReader();
               reader.onload = function(e) {
