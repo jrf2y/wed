@@ -208,14 +208,19 @@
                     <!-- Photo previews will be added here -->
                 </div>
 
-                <div class="flex justify-between items-center mt-6">
-                    <button id="selection-back" class="text-[var(--accent)] font-medium py-2 px-4 rounded-lg">
-                        <i class="fas fa-arrow-left mr-2"></i> Back
-                    </button>
-                    <button id="selection-next" class="btn-primary py-3 px-6 rounded-lg text-white font-medium hidden">
-                        Upload Photos <i class="fas fa-cloud-upload-alt ml-2"></i>
-                    </button>
+                <!-- Button container -->
+                <div class="relative">
+                  <!-- Back button (normal flow) -->
+                  <button id="selection-back" class="text-[var(--accent)] font-medium py-2 px-4 rounded-lg">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                  </button>
+                
+                  <!-- Upload button (floating bottom right) -->
+                  <button id="selection-next" class="btn-primary py-3 px-6 rounded-lg text-white font-medium shadow-lg fixed bottom-4 right-4 z-20 hidden">
+                    Upload Photos <i class="fas fa-cloud-upload-alt ml-2"></i>
+                  </button>
                 </div>
+
             </div>
             
             <!-- Step 3: Upload Progress -->
