@@ -333,11 +333,11 @@
           fileInput.addEventListener('change', handleFileSelect);
 
           // 📱 Mobile: Dismiss keyboard when tapping outside
-          document.body.addEventListener('touchstart', function (e) {
-            if (!e.target.closest('input, textarea')) {
-              document.activeElement.blur();
-            }
-          });
+          //document.body.addEventListener('touchstart', function (e) {
+          //  if (!e.target.closest('input, textarea')) {
+          //    document.activeElement.blur();
+          //  }
+          //});
       
           function showStep(step) {
             document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
