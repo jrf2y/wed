@@ -339,7 +339,23 @@
             showStep('selection');
           });
       
-          fileInput.addEventListener('change', handleFileSelect);
+            // … earlier in DOMContentLoaded …
+            const fileInput = document.getElementById('file-input');
+            let hasScrolledToSelection = false;
+            
+            // replace the old one‑liner with:
+            fileInput.addEventListener('change', e => {
+              handleFileSelect(e);
+            
+              // only scroll on the true file-input change, once
+              if (e.type === 'change' && !hasScrolledToSelection) {
+                hasScrolledToSelection = true;
+                document
+                  .getElementById('step-selection')
+                  .scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            });
+
 
           // 📱 Mobile: Dismiss keyboard when tapping outside
           document.body.addEventListener('touchstart', function(e) {
@@ -365,46 +381,40 @@
           }
           
           function handleFileSelect(e) {
-            const files = Array.from(e.target.files).filter(file => file.type.startsWith("image/"));
-            if (files.length === 0) return;
-            selectedFiles = files;
-            previewContainer.innerHTML = '';
-            previewContainer.classList.remove('hidden');
-            buttons.selectionNext.classList.remove('hidden');
-      
-            // Only trigger scroll if this is from a direct user file selection, not a re-render
-            if (!hasScrolledToSelection && e.isTrusted) {
-              hasScrolledToSelection = true;
-              setTimeout(() => {
-                document.getElementById('step-selection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }, 100);
-            }
-
-            selectedFiles.forEach((file, index) => {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                const preview = document.createElement('div');
-                preview.className = 'photo-preview relative overflow-hidden rounded-lg bg-gray-100 aspect-square';
-                preview.innerHTML = `
-                  <img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover">
-                  <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm truncate">
-                    ${file.name}
-                  </div>
-                  <button class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full w-6 h-6 flex items-center justify-center text-red-500 remove-photo" data-index="${index}">
-                    <i class="fas fa-times text-xs"></i>
-                  </button>
-                `;
-                previewContainer.appendChild(preview);
-                preview.querySelector('.remove-photo').addEventListener('click', evt => {
+          const files = Array.from(e.target.files)
+                             .filter(file => file.type.startsWith("image/"));
+          if (!files.length) return;
+        
+          selectedFiles = files;
+          previewContainer.innerHTML = '';
+          previewContainer.classList.remove('hidden');
+          buttons.selectionNext.classList.remove('hidden');
+        
+          selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = evt => {
+              const preview = document.createElement('div');
+              preview.className = 'photo-preview relative overflow-hidden rounded-lg bg-gray-100 aspect-square';
+              preview.innerHTML = `
+                <img src="${evt.target.result}" alt="Preview" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-sm truncate">
+                  ${file.name}
+                </div>
+                <button class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full w-6 h-6 flex items-center justify-center text-red-500 remove-photo" data-index="${index}">
+                  <i class="fas fa-times text-xs"></i>
+                </button>
+              `;
+              previewContainer.appendChild(preview);
+              preview.querySelector('.remove-photo')
+                .addEventListener('click', evt => {
                   evt.stopPropagation();
-                  removeFile(parseInt(evt.currentTarget.getAttribute('data-index')));
+                  removeFile(+evt.currentTarget.dataset.index);
                 });
-              };
-              reader.readAsDataURL(file);
-            });
+            };
+            reader.readAsDataURL(file);
+          });
+        }
 
-          }
-      
           function removeFile(index) {
             selectedFiles.splice(index, 1);
             previewContainer.innerHTML = '';
