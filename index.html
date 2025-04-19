@@ -372,13 +372,14 @@
             previewContainer.classList.remove('hidden');
             buttons.selectionNext.classList.remove('hidden');
       
-            if (!hasScrolledToSelection) {
+            // Only trigger scroll if this is from a direct user file selection, not a re-render
+            if (!hasScrolledToSelection && e.isTrusted) {
               hasScrolledToSelection = true;
               setTimeout(() => {
                 document.getElementById('step-selection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }, 100);
             }
-            
+
             selectedFiles.forEach((file, index) => {
               const reader = new FileReader();
               reader.onload = function(e) {
