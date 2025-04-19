@@ -209,17 +209,20 @@
                 </div>
 
                 <!-- Button container -->
-                <div class="relative">
-                  <!-- Back button (normal flow) -->
+                <!-- Button container for Back (in normal flow) -->
+                <div class="relative z-10">
                   <button id="selection-back" class="text-[var(--accent)] font-medium py-2 px-4 rounded-lg">
                     <i class="fas fa-arrow-left mr-2"></i> Back
                   </button>
+                </div>
                 
-                  <!-- Upload button (floating bottom right) -->
-                  <button id="selection-next" class="btn-primary fixed bottom-0 left-0 w-full py-5 text-white text-xl font-semibold shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-30 hidden">
-                      Upload Photos <i class="fas fa-cloud-upload-alt ml-2"></i>
+                <!-- Floating Upload button (separate from the layout flow) -->
+                <div id="upload-action-bar" class="fixed bottom-6 left-0 w-full px-4 z-50">
+                  <button id="selection-next" class="btn-primary w-full py-5 rounded-full text-white text-xl font-semibold shadow-xl hidden">
+                    Upload Photos <i class="fas fa-cloud-upload-alt ml-2"></i>
                   </button>
                 </div>
+
 
             </div>
             
