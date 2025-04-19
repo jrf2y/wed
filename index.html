@@ -281,9 +281,7 @@
             selectionNext: document.getElementById('selection-next'),
             successNew: document.getElementById('success-new')
           };
-
-          const FAKE_UPLOAD_MODE = true; // 🔧 Toggle this to false when ready for real uploads
-
+      
           const fileInput = document.getElementById('file-input');
           const guestNameInput = document.getElementById('guest-name');
           const previewContainer = document.getElementById('preview-container');
@@ -299,18 +297,11 @@
           createHearts();
       
           buttons.nameNext.addEventListener('click', () => {
-            if (uploadInProgress) return;
-
-            // 📱 Force keyboard to close before moving on
-            guestNameInput.blur();
-
-            // Small delay to let blur happen
-            setTimeout(() => {
-              guestName = guestNameInput.value.trim();
-              showStep('selection');
-            }, 100);
+            if (uploadInProgress) return; // 🔒 Prevent step navigation during upload
+            guestName = guestNameInput.value.trim();
+            showStep('selection');
           });
-
+      
           buttons.selectionBack.addEventListener('click', () => {
             if (!uploadInProgress) showStep('name');
           });
@@ -418,42 +409,45 @@
             });
           }
       
-          function startUpload() {
-            uploadContainer.innerHTML = '';
-            uploadCount.textContent = `0/${selectedFiles.length} photos`;
-            uploadPercent.textContent = '0%';
-            progressBar.style.width = '0%';
-      
-            selectedFiles.forEach((file, index) => {
-              const uploadItem = document.createElement('div');
-              uploadItem.className = 'upload-item bg-[var(--primary)] p-4 rounded-lg';
-              uploadItem.innerHTML = `
-                <div class="flex items-center">
-                  <div class="w-10 h-10 mr-4">
-                    <img src="" alt="thumb" class="w-full h-full object-cover rounded-lg" id="thumb-${index}">
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <div class="flex justify-between">
-                      <p class="font-medium truncate">${file.name}</p>
-                      <span class="upload-status text-sm">Waiting</span>
+            function startUpload() {
+              uploadContainer.innerHTML = '';
+              uploadCount.textContent = `4/4 photos`;
+              uploadPercent.textContent = '100%';
+              progressBar.style.width = '100%';
+            
+              for (let i = 0; i < 4; i++) {
+                const uploadItem = document.createElement('div');
+                uploadItem.className = 'upload-item bg-[var(--primary)] p-4 rounded-lg';
+                uploadItem.innerHTML = `
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 mr-4">
+                      <div class="w-full h-full object-cover rounded-lg bg-gray-300 flex items-center justify-center text-sm text-gray-600">📸</div>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                      <div class="file-progress bg-[var(--accent)] h-1.5 rounded-full" style="width: 0%"></div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex justify-between">
+                        <p class="font-medium truncate">test_photo_${i + 1}.jpg</p>
+                        <span class="upload-status text-sm">Uploaded</span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                        <div class="file-progress bg-[var(--accent)] h-1.5 rounded-full" style="width: 100%"></div>
+                      </div>
                     </div>
-                  </div>
-                </div>`;
-              uploadContainer.appendChild(uploadItem);
-      
-              const thumbImg = uploadItem.querySelector(`#thumb-${index}`);
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                thumbImg.src = e.target.result;
-              };
-              reader.readAsDataURL(file);
-            });
-      
-            uploadNextFile(0);
-          }
+                  </div>`;
+                uploadContainer.appendChild(uploadItem);
+              }
+            
+              // fake delay before success screen
+              setTimeout(() => {
+                showStep('success');
+                burstHearts();
+            
+                setTimeout(() => {
+                  const line = document.getElementById('thanks-line');
+                  if (line) line.classList.add('opacity-100');
+                }, 1000);
+              }, 2000);
+            }
+
       
           function uploadNextFile(index) {
             if (index >= selectedFiles.length) {
@@ -505,19 +499,6 @@
                 progressBarElem.style.width = `${percent.toFixed(0)}%`;
               }, intervalMs);
 
-              if (FAKE_UPLOAD_MODE) {
-                // 🎭 Fake upload delay and result
-                setTimeout(() => {
-                  clearInterval(interval);
-                  progressBarElem.style.width = '100%';
-                  statusText.textContent = "Uploaded";
-                  uploadCount.textContent = `${index + 1}/${selectedFiles.length} photos`;
-                  uploadPercent.textContent = `${Math.round((index + 1) / selectedFiles.length * 100)}%`;
-                  progressBar.style.width = `${Math.round((index + 1) / selectedFiles.length * 100)}%`;
-                  uploadNextFile(index + 1);
-                }, 1000 + animationDuration); // give it a believable delay
-              } else {
-              
               fetch("https://script.google.com/macros/s/AKfycbwcmUzUmVZ4Kk_MF4kLLenmnNhgi45spaOqPkhwNO9liojPRlJxhECLd4MgvPuOnVud/exec", {
                 method: "POST",
                 body: formData
@@ -539,7 +520,6 @@
                   statusText.textContent = "Failed";
                   uploadNextFile(index + 1);
                 });
-              }  
             };
 
             reader.readAsDataURL(file);
@@ -578,44 +558,34 @@
             }
           }
 
-            function burstHearts() {
-              let container = document.createElement('div');
-              container.className = 'burst-hearts pointer-events-none fixed top-0 left-0 w-full h-full z-[9999]';
-              container.id = 'burst-hearts-container';
-              document.body.appendChild(container);
-            
-              const colors = ['#f8e9e1', '#e8c4b8', '#d4a59a', '#b3887e'];
-            
-              for (let i = 0; i < 25; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart absolute pointer-events-none';
-                heart.innerHTML = '<i class="fas fa-heart"></i>';
-            
-                const size = Math.random() * 24 + 12;
-                const left = Math.random() * 100;
-                const top = Math.random() * 100;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-            
-                heart.style.left = `${left}%`;
-                heart.style.top = `${top}%`;
-                heart.style.fontSize = `${size}px`;
-                heart.style.color = color;
-                heart.style.opacity = 1;
-                heart.style.animation = `popUp 1.5s ease-out forwards`;
-            
-                container.appendChild(heart);
-            
-                setTimeout(() => {
-                  heart.remove();
-                }, 1500);
-              }
-            
-              // remove the whole container after animation
-              setTimeout(() => {
-                container.remove();
-              }, 1600);
-            }
+          function burstHearts() {
+            const container = document.getElementById('hearts-container');
+            const colors = ['#f8e9e1', '#e8c4b8', '#d4a59a', '#b3887e'];
 
+            for (let i = 0; i < 25; i++) {
+              const heart = document.createElement('div');
+              heart.className = 'heart absolute pointer-events-none';
+              heart.innerHTML = '<i class="fas fa-heart"></i>';
+
+              const size = Math.random() * 24 + 12;
+              const left = Math.random() * 100;
+              const top = Math.random() * 100;
+              const color = colors[Math.floor(Math.random() * colors.length)];
+
+              heart.style.left = `${left}%`;
+              heart.style.top = `${top}%`;
+              heart.style.fontSize = `${size}px`;
+              heart.style.color = color;
+              heart.style.opacity = 1;
+              heart.style.animation = `popUp 1.5s ease-out forwards`;
+
+              container.appendChild(heart);
+
+              setTimeout(() => {
+                heart.remove();
+              }, 1500);
+            }
+          }
 
           showStep('name');
         });
@@ -625,6 +595,7 @@
         document.addEventListener("contextmenu", e => e.preventDefault());
         document.addEventListener("dragstart", e => e.preventDefault());
       </script>
- 
+
+      
 </body>
 </html>
