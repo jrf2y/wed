@@ -166,6 +166,7 @@
 <body class="min-h-screen relative overflow-x-hidden">
     <!-- Floating hearts decoration -->
     <div class="floating-hearts" id="hearts-container"></div>
+    <div class="burst-hearts pointer-events-none fixed top-0 left-0 w-full h-full z-[9999]" id="burst-hearts-container"></div>
     
     <!-- Main container -->
     <div class="container mx-auto px-4 py-8 max-w-3xl">
@@ -559,7 +560,7 @@
           }
 
           function burstHearts() {
-            const container = document.getElementById('hearts-container');
+            const container = document.getElementById('burst-hearts-container');
             const colors = ['#f8e9e1', '#e8c4b8', '#d4a59a', '#b3887e'];
 
             for (let i = 0; i < 25; i++) {
