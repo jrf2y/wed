@@ -282,7 +282,9 @@
             selectionNext: document.getElementById('selection-next'),
             successNew: document.getElementById('success-new')
           };
-      
+
+          const FAKE_UPLOAD_MODE = true; // 🔧 Toggle this to false when ready for real uploads
+
           const fileInput = document.getElementById('file-input');
           const guestNameInput = document.getElementById('guest-name');
           const previewContainer = document.getElementById('preview-container');
@@ -410,45 +412,42 @@
             });
           }
       
-            function startUpload() {
-              uploadContainer.innerHTML = '';
-              uploadCount.textContent = `4/4 photos`;
-              uploadPercent.textContent = '100%';
-              progressBar.style.width = '100%';
-            
-              for (let i = 0; i < 4; i++) {
-                const uploadItem = document.createElement('div');
-                uploadItem.className = 'upload-item bg-[var(--primary)] p-4 rounded-lg';
-                uploadItem.innerHTML = `
-                  <div class="flex items-center">
-                    <div class="w-10 h-10 mr-4">
-                      <div class="w-full h-full object-cover rounded-lg bg-gray-300 flex items-center justify-center text-sm text-gray-600">📸</div>
+          function startUpload() {
+            uploadContainer.innerHTML = '';
+            uploadCount.textContent = `0/${selectedFiles.length} photos`;
+            uploadPercent.textContent = '0%';
+            progressBar.style.width = '0%';
+      
+            selectedFiles.forEach((file, index) => {
+              const uploadItem = document.createElement('div');
+              uploadItem.className = 'upload-item bg-[var(--primary)] p-4 rounded-lg';
+              uploadItem.innerHTML = `
+                <div class="flex items-center">
+                  <div class="w-10 h-10 mr-4">
+                    <img src="" alt="thumb" class="w-full h-full object-cover rounded-lg" id="thumb-${index}">
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex justify-between">
+                      <p class="font-medium truncate">${file.name}</p>
+                      <span class="upload-status text-sm">Waiting</span>
                     </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex justify-between">
-                        <p class="font-medium truncate">test_photo_${i + 1}.jpg</p>
-                        <span class="upload-status text-sm">Uploaded</span>
-                      </div>
-                      <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                        <div class="file-progress bg-[var(--accent)] h-1.5 rounded-full" style="width: 100%"></div>
-                      </div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                      <div class="file-progress bg-[var(--accent)] h-1.5 rounded-full" style="width: 0%"></div>
                     </div>
-                  </div>`;
-                uploadContainer.appendChild(uploadItem);
-              }
-            
-              // fake delay before success screen
-              setTimeout(() => {
-                showStep('success');
-                burstHearts();
-            
-                setTimeout(() => {
-                  const line = document.getElementById('thanks-line');
-                  if (line) line.classList.add('opacity-100');
-                }, 1000);
-              }, 2000);
-            }
-
+                  </div>
+                </div>`;
+              uploadContainer.appendChild(uploadItem);
+      
+              const thumbImg = uploadItem.querySelector(`#thumb-${index}`);
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                thumbImg.src = e.target.result;
+              };
+              reader.readAsDataURL(file);
+            });
+      
+            uploadNextFile(0);
+          }
       
           function uploadNextFile(index) {
             if (index >= selectedFiles.length) {
@@ -500,6 +499,19 @@
                 progressBarElem.style.width = `${percent.toFixed(0)}%`;
               }, intervalMs);
 
+              if (FAKE_UPLOAD_MODE) {
+                // 🎭 Fake upload delay and result
+                setTimeout(() => {
+                  clearInterval(interval);
+                  progressBarElem.style.width = '100%';
+                  statusText.textContent = "Uploaded";
+                  uploadCount.textContent = `${index + 1}/${selectedFiles.length} photos`;
+                  uploadPercent.textContent = `${Math.round((index + 1) / selectedFiles.length * 100)}%`;
+                  progressBar.style.width = `${Math.round((index + 1) / selectedFiles.length * 100)}%`;
+                  uploadNextFile(index + 1);
+                }, 1000 + animationDuration); // give it a believable delay
+              } else {
+              
               fetch("https://script.google.com/macros/s/AKfycbwcmUzUmVZ4Kk_MF4kLLenmnNhgi45spaOqPkhwNO9liojPRlJxhECLd4MgvPuOnVud/exec", {
                 method: "POST",
                 body: formData
@@ -521,6 +533,7 @@
                   statusText.textContent = "Failed";
                   uploadNextFile(index + 1);
                 });
+              }  
             };
 
             reader.readAsDataURL(file);
