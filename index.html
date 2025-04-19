@@ -578,34 +578,44 @@
             }
           }
 
-          function burstHearts() {
-            const container = document.getElementById('burst-hearts-container');
-            const colors = ['#f8e9e1', '#e8c4b8', '#d4a59a', '#b3887e'];
-
-            for (let i = 0; i < 25; i++) {
-              const heart = document.createElement('div');
-              heart.className = 'heart absolute pointer-events-none';
-              heart.innerHTML = '<i class="fas fa-heart"></i>';
-
-              const size = Math.random() * 24 + 12;
-              const left = Math.random() * 100;
-              const top = Math.random() * 100;
-              const color = colors[Math.floor(Math.random() * colors.length)];
-
-              heart.style.left = `${left}%`;
-              heart.style.top = `${top}%`;
-              heart.style.fontSize = `${size}px`;
-              heart.style.color = color;
-              heart.style.opacity = 1;
-              heart.style.animation = `popUp 1.5s ease-out forwards`;
-
-              container.appendChild(heart);
-
+            function burstHearts() {
+              let container = document.createElement('div');
+              container.className = 'burst-hearts pointer-events-none fixed top-0 left-0 w-full h-full z-[9999]';
+              container.id = 'burst-hearts-container';
+              document.body.appendChild(container);
+            
+              const colors = ['#f8e9e1', '#e8c4b8', '#d4a59a', '#b3887e'];
+            
+              for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart absolute pointer-events-none';
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+            
+                const size = Math.random() * 24 + 12;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+            
+                heart.style.left = `${left}%`;
+                heart.style.top = `${top}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.color = color;
+                heart.style.opacity = 1;
+                heart.style.animation = `popUp 1.5s ease-out forwards`;
+            
+                container.appendChild(heart);
+            
+                setTimeout(() => {
+                  heart.remove();
+                }, 1500);
+              }
+            
+              // remove the whole container after animation
               setTimeout(() => {
-                heart.remove();
-              }, 1500);
+                container.remove();
+              }, 1600);
             }
-          }
+
 
           showStep('name');
         });
@@ -615,7 +625,6 @@
         document.addEventListener("contextmenu", e => e.preventDefault());
         document.addEventListener("dragstart", e => e.preventDefault());
       </script>
-
-    <div class="burst-hearts pointer-events-none fixed top-0 left-0 w-full h-full z-[9999]" id="burst-hearts-container"></div>  
+ 
 </body>
 </html>
