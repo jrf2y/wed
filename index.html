@@ -302,14 +302,14 @@
             if (uploadInProgress) return;
 
             // 📱 Force keyboard to close before moving on
-            //guestNameInput.blur();
+            guestNameInput.blur();
 
             // Small delay to let blur happen
-            //setTimeout(() => {
-            //  guestName = guestNameInput.value.trim();
-            //  showStep('selection');
-           // }, 100);
-         // });
+            setTimeout(() => {
+              guestName = guestNameInput.value.trim();
+              showStep('selection');
+            }, 100);
+          });
 
           buttons.selectionBack.addEventListener('click', () => {
             if (!uploadInProgress) showStep('name');
@@ -333,11 +333,16 @@
           fileInput.addEventListener('change', handleFileSelect);
 
           // 📱 Mobile: Dismiss keyboard when tapping outside
-          //document.body.addEventListener('touchstart', function (e) {
-          //  if (!e.target.closest('input, textarea')) {
-          //    document.activeElement.blur();
-          //  }
-          //});
+          document.body.addEventListener('touchstart', function(e) {
+              // if it's not an input *or* your Continue button, blur
+              if (
+                !e.target.closest('input, textarea') &&
+                !e.target.closest('#name-next')    // ← ignore your Continue btn
+              ) {
+                document.activeElement.blur();
+              }
+            });
+
       
           function showStep(step) {
             document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
